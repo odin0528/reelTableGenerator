@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Reel Table Generate</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap-grid.css">
+    <script src="init.js"></script>
+    <script src="functions.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="algorithm/5x3.js"></script>
+    <script src="payline/nine.js"></script>
+    <script src="configs/zhao_cai_tong_zi.js"></script>
+    <style>
+      table{
+        border: 1px solid #666;
+      }
+      td{
+        text-align: center;
+      }
+    </style>
+    <script>
+      var gameType = 'zhao_cai_tong_zi';
+      var config = configs['zhao_cai_tong_zi'];
+
+      $(function(){
+        $('#gameType').on('change', changeGameType)
+        $('#gameType').change();
+      })
+    </script>
+  </head>
+  <body>
+    <div class="row w50 pb-2">
+      <div class="col">遊戲
+        <select id="gameType">
+          <option value="zhao_cai_tong_zi">招財童子</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <table id="symbolTable">
+          <thead>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <button onclick="getReelTable()">產生隨機輪帶表</button>
+    </div>
+    <div id="reelTable" class="row">
+
+    </div>
+    <div id="result" class="row">
+      <span>組合可能性：<span id="possibility"></span></span>
+    </div>
+
+  </body>
+</html>
