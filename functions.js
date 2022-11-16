@@ -61,36 +61,18 @@ function generateSymbolTable(){
 
   $tableHead.empty();
   $tableBody.empty();
-  $tableHead.append('<tr class="row"><th class="col">圖案</th></tr>');
+  $tableHead.append('<tr class="row"><th class="col">ID</th><<th class="col">圖案</th></tr>');
   for(let i = 1; i <= reelWidth; i++){
     $tableHead.find('tr').append(`<th class="col">轉輪${i}</th>`);
   }
 
   for(let i = 0; i < symbolNumber; i++){
-    let row = `<tr class="row"><td class="col">${config.symbols[i]}</td>`
+    let row = `<tr class="row"><td class="col">${i}</td><td class="col">${config.symbols[i]}</td>`
 
     for(let j = 0; j < reelWidth; j++){
-      row += `<td class="col"><input id="s_${j}_${i}" class="col-8" type="text" value="${parseInt(i/3)+1}"></td>`
+      row += `<td class="col"><input id="s_${j}_${i}" class="col-8" type="text" value="1"></td>`
     }
 
-    row += `</tr>`;
-    $tableBody.append(row);
-  }
-
-  if(enableScatter){
-    let row = `<tr class="row"><td class="col">SC</td>`
-    for(let i = 1; i <= reelWidth; i++){
-      row += `<td class="col"><input class="col-8" type="text" value="0"></td>`
-    }
-    row += `</tr>`;
-    $tableBody.append(row);
-  }
-
-  if(enableWild){
-    let row = `<tr class="row"><td class="col">WD</td>`
-    for(let i = 1; i <= reelWidth; i++){
-      row += `<td class="col"><input class="col-8" type="text" value="0"></td>`
-    }
     row += `</tr>`;
     $tableBody.append(row);
   }

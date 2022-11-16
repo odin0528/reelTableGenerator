@@ -18,12 +18,12 @@ const analyze_5x3 = (reelTable) => {
             bonus += config.payline(table)
             possibility++;
 
-            /*if(bonus > 1000){
+            /* if(bonus > 1000){
               console.warn(possibility)
               console.warn(bonus)
               console.warn((bonus/possibility).toFixed(2))
               return;
-            }*/
+            } */
           }
         }
       }
@@ -31,6 +31,6 @@ const analyze_5x3 = (reelTable) => {
   }
   console.warn(possibility)
   console.warn(bonus)
-  console.warn((bonus/possibility).toFixed(2))
+  console.warn((bonus/possibility/9).toFixed(2))
   // return;
 }
