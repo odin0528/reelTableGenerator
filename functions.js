@@ -54,10 +54,9 @@ function generatePaytable(){
 function generateSymbolTable(){
   const reelWidth = config.width;
   const symbolNumber = config.symbols.length;
-  const enableScatter = config.scatter;
-  const enableWild = config.wild;
   const $tableHead =$('#symbolTable thead');
   const $tableBody =$('#symbolTable tbody');
+  const symbolTable = JSON.parse(localStorage.getItem('symbolTable')) || null
 
   $tableHead.empty();
   $tableBody.empty();
@@ -70,7 +69,8 @@ function generateSymbolTable(){
     let row = `<tr class="row"><td class="col">${i}</td><td class="col">${config.symbols[i]}</td>`
 
     for(let j = 0; j < reelWidth; j++){
-      row += `<td class="col"><input id="s_${j}_${i}" class="col-8" type="text" value="1"></td>`
+      const number = symbolTable ? symbolTable[j][i] : 1
+      row += `<td class="col"><input id="s_${j}_${i}" class="col-8" type="text" value="${number}"></td>`
     }
 
     row += `</tr>`;
@@ -79,6 +79,7 @@ function generateSymbolTable(){
 }
 
 function getReelTable(){
+  saveSymbolNumberTable()
   const startAt = Date.now()
   console.error('start at:', startAt)
   const reelWidth = config.width;
@@ -87,6 +88,7 @@ function getReelTable(){
   var possibility = 1;
 
   const reelTable = []
+  const calcReelTable = []
   for(let j = 0; j < reelWidth; j++){
     var symbolCol = [];
     for(let i = 0; i < symbolNumber; i++){
@@ -97,7 +99,8 @@ function getReelTable(){
     }
     shuffle(symbolCol)
     possibility *= symbolCol.length
-    reelTable.push([...symbolCol, symbolCol[0], symbolCol[1]])
+    reelTable.push(symbolCol)
+    calcReelTable.push([...symbolCol, symbolCol[0], symbolCol[1]])
   }
   $('#reelTable').text(JSON.stringify(reelTable))
   $('#possibility').text(possibility)
@@ -109,10 +112,24 @@ function getReelTable(){
     console.error('end at:', Date.now())
     console.error('executing for:', endAt - startAt)
   }) */
-  config.analyze(reelTable)
+  config.analyze(calcReelTable)
   const endAt = Date.now()
   console.error('end at:', Date.now())
   console.error('executing for:', endAt - startAt)
+}
+
+function saveSymbolNumberTable(){
+  const $symbolTableBody =$('#symbolTable tbody');
+  const symbolTable = []
+  for(let j = 0; j < config.width; j++){
+    var symbolCol = [];
+    for(let i = 0; i < config.symbols.length; i++){
+      const symbolAmount = parseInt($symbolTableBody.find(`#s_${j}_${i}`).val())
+      symbolCol.push(symbolAmount);
+    }
+    symbolTable.push(symbolCol)
+  }
+  localStorage.setItem('symbolTable', JSON.stringify(symbolTable))
 }
 
 function getRTP(){

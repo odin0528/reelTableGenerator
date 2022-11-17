@@ -38,11 +38,8 @@ const twoWay9Payline = (table) => {
 
   const getLineResult = (line) => {
     const left = getLeftSideResult(line)
-    const right = getRightSideResult(line)
-    if(right[2] > left[2]){
-      return right
-    }
-    return left
+    const right = left[0] == 5 ? [0, '', 0] : getRightSideResult(line)
+    return [left, right]
   }
 
   const getLeftSideResult = (line) => {
@@ -85,27 +82,27 @@ const twoWay9Payline = (table) => {
 
   const getScatter = () =>{
     let ls = 0
+    let lb = 0
     let rs = 0
+    let rb = 0
 
     for(let i = 0; i < config.width ; i++){
-      if(table[i].indexOf(config.scatter) === -1){
+      if(table[i].indexOf(config.scatter) === -1 && i > 0){
         ls = i
+        lb = config.defaultPaytable[ls-1][config.scatter]
         break;
       }
     }
 
     for(let i = config.width; i > 0 ; i--){
-      if(table[i-1].indexOf(config.scatter) === -1){
+      if(table[i-1].indexOf(config.scatter) === -1 && i < config.width){
         rs = config.width - i
+        rb = config.defaultPaytable[rs-1][config.scatter]
         break;
       }
     }
 
-    if(rs > ls)
-      return [rs, 'SC', config.defaultPaytable[rs-1][config.scatter] * 9]
-    else if(ls > 0)
-      return [ls, 'SC', config.defaultPaytable[ls-1][config.scatter] * 9]
-    return [0, 'SC', 0]
+    return [[ls, 'SC', lb * 9], [rs, 'SC', rb * 9]]
   }
 
   let bonus = 0.0;
@@ -119,16 +116,16 @@ const twoWay9Payline = (table) => {
   const line8 = getLine8()
   const line9 = getLine9()
   const scatter = getScatter()
-  bonus += line1[2]
-  bonus += line2[2]
-  bonus += line3[2]
-  bonus += line4[2]
-  bonus += line5[2]
-  bonus += line6[2]
-  bonus += line7[2]
-  bonus += line8[2]
-  bonus += line9[2]
-  bonus += scatter[2]
+  bonus += line1[0][2] + line1[1][2]
+  bonus += line2[0][2] + line2[1][2]
+  bonus += line3[0][2] + line3[1][2]
+  bonus += line4[0][2] + line4[1][2]
+  bonus += line5[0][2] + line5[1][2]
+  bonus += line6[0][2] + line6[1][2]
+  bonus += line7[0][2] + line7[1][2]
+  bonus += line8[0][2] + line8[1][2]
+  bonus += line9[0][2] + line9[1][2]
+  bonus += scatter[0][2] + scatter[1][2]
   
   /* if(bonus > 0){
     console.log(table)
