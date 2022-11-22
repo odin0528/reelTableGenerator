@@ -7,9 +7,12 @@
     <script src="functions.js"></script>
     <script src="jquery.min.js"></script>
     <script src="algorithm/5x3.js"></script>
+    <script src="algorithm/5x4.js"></script>
     <script src="payline/nine.js"></script>
+    <script src="payline/oneWay40Payline.js"></script>
     <script src="configs/zhao_cai_tong_zi.js"></script>
     <script src="configs/zhao_cai_jin_bao.js"></script>
+    <script src="configs/wild_west_gold.js"></script>
     <style>
       table{
         border: 1px solid #666;
@@ -19,9 +22,6 @@
       }
     </style>
     <script>
-      var gameType = 'zhao_cai_tong_zi';
-      var config = configs['zhao_cai_tong_zi'];
-
       $(function(){
         $('#gameType').on('change', changeGameType)
         $('#gameType').change();
@@ -32,8 +32,9 @@
     <div class="row w50 pb-2">
       <div class="col">遊戲
         <select id="gameType">
-          <option value="zhao_cai_tong_zi">招財童子</option>
+          <option value="wild_west_gold">牛仔</option>
           <option value="zhao_cai_jin_bao">招財進寶</option>
+          <option value="zhao_cai_tong_zi">招財童子</option>
         </select>
       </div>
     </div>
