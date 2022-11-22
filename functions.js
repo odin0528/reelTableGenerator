@@ -1,6 +1,7 @@
 const changeGameType = () => {
   const gameType = $('#gameType').val();
   config = configs[gameType];
+  console.log(config)
   // generatePaytable();
   generateSymbolTable();
 }
