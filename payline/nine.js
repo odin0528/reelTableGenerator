@@ -1,40 +1,15 @@
 const twoWay9Payline = (table) => {
-  const getLine1 = () => {
-    const line = [table[0][1],table[1][1],table[2][1],table[3][1],table[4][1]]
-    return getLineResult(line)
-  }
-  const getLine2 = () => {
-    const line = [table[0][0],table[1][0],table[2][0],table[3][0],table[4][0]]
-    return getLineResult(line)
-  }
-  const getLine3 = () => {
-    const line = [table[0][2],table[1][2],table[2][2],table[3][2],table[4][2]]
-    return getLineResult(line)
-  }
-  const getLine4 = () => {
-    const line = [table[0][0],table[1][1],table[2][2],table[3][1],table[4][0]]
-    return getLineResult(line)
-  }
-  const getLine5 = () => {
-    const line = [table[0][2],table[1][1],table[2][0],table[3][1],table[4][2]]
-    return getLineResult(line)
-  }
-  const getLine6 = () => {
-    const line = [table[0][0],table[1][0],table[2][1],table[3][0],table[4][0]]
-    return getLineResult(line)
-  }
-  const getLine7 = () => {
-    const line = [table[0][2],table[1][2],table[2][1],table[3][2],table[4][2]]
-    return getLineResult(line)
-  }
-  const getLine8 = () => {
-    const line = [table[0][1],table[1][0],table[2][0],table[3][0],table[4][1]]
-    return getLineResult(line)
-  }
-  const getLine9 = () => {
-    const line = [table[0][1],table[1][2],table[2][2],table[3][2],table[4][1]]
-    return getLineResult(line)
-  }
+  const lines = [
+    [1,1,1,1,1],
+    [0,0,0,0,0],
+    [2,2,2,2,2],
+    [0,1,2,1,0],
+    [2,1,0,1,2],
+    [0,0,1,0,0],
+    [2,2,1,2,2],
+    [1,0,0,0,1],
+    [1,2,2,2,1],
+  ];
 
   const getLineResult = (line) => {
     const left = getLeftSideResult(line)
@@ -87,7 +62,8 @@ const twoWay9Payline = (table) => {
     let rb = 0
 
     for(let i = 0; i < config.width ; i++){
-      if(table[i].indexOf(config.scatter) === -1 && i > 0){
+      if(table[i].indexOf(config.scatter) === -1){
+        if(i === 0) break;
         ls = i
         lb = config.defaultPaytable[ls-1][config.scatter]
         break;
@@ -95,7 +71,8 @@ const twoWay9Payline = (table) => {
     }
 
     for(let i = config.width; i > 0 ; i--){
-      if(table[i-1].indexOf(config.scatter) === -1 && i < config.width){
+      if(table[i-1].indexOf(config.scatter) === -1){
+        if(i === config.width) break;
         rs = config.width - i
         rb = config.defaultPaytable[rs-1][config.scatter]
         break;
@@ -106,43 +83,36 @@ const twoWay9Payline = (table) => {
   }
 
   let bonus = 0.0;
-  const line1 = getLine1()
-  const line2 = getLine2()
-  const line3 = getLine3()
-  const line4 = getLine4()
-  const line5 = getLine5()
-  const line6 = getLine6()
-  const line7 = getLine7()
-  const line8 = getLine8()
-  const line9 = getLine9()
-  const scatter = getScatter()
-  bonus += line1[0][2] + line1[1][2]
-  bonus += line2[0][2] + line2[1][2]
-  bonus += line3[0][2] + line3[1][2]
-  bonus += line4[0][2] + line4[1][2]
-  bonus += line5[0][2] + line5[1][2]
-  bonus += line6[0][2] + line6[1][2]
-  bonus += line7[0][2] + line7[1][2]
-  bonus += line8[0][2] + line8[1][2]
-  bonus += line9[0][2] + line9[1][2]
-  bonus += scatter[0][2] + scatter[1][2]
-  
-  /* if(bonus > 0){
-    console.log(table)
-    console.log('LINE1:', line1)
-    console.log('LINE2:', line2)
-    console.log('LINE3:', line3)
-    console.log('LINE4:', line4)
-    console.log('LINE5:', line5)
-    console.log('LINE6:', line6)
-    console.log('LINE7:', line7)
-    console.log('LINE8:', line8)
-    console.log('LINE9:', line9)
-    console.log('SCATTER:', scatter)
-    console.log(bonus)
-  } */
+  const links = [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+  ]
+  for(let i=0; i < lines.length; i++){
+    const line = [
+      table[0][lines[i][0]],
+      table[1][lines[i][1]],
+      table[2][lines[i][2]],
+      table[3][lines[i][3]],
+      table[4][lines[i][4]]
+    ]
+    const result = getLineResult(line)
+    bonus += parseFloat((result[0][2] + result[1][2]).toFixed(2))
 
-  return bonus
+    /* if(result[0][2] > 0 || result[1][2] > 0){
+      links[lines[i][0]][0] = 1
+      links[lines[i][1]][1] = 1
+      links[lines[i][2]][2] = 1
+      links[lines[i][3]][3] = 1
+      links[lines[i][4]][4] = 1
+    } */
+  }
+
+  const scatter = getScatter()
+  bonus += scatter[0][2] + scatter[1][2]
+
+  return {bonus}
+  // return {bonus, links}
 }
 
 

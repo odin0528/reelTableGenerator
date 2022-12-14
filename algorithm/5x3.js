@@ -1,6 +1,6 @@
 const analyze_5x3 = (reelTable) => {
   let possibility = 0;
-  let bonus = 0.0
+  let totalBonus = 0.0
   for(let a = 0; a < reelTable[0].length - 2; a++){
     for(let b = 0; b < reelTable[1].length - 2; b++){
       for(let c = 0; c < reelTable[2].length - 2; c++){
@@ -15,7 +15,8 @@ const analyze_5x3 = (reelTable) => {
               reelTable[4].slice(e, e+3)
             ];
 
-            bonus += config.payline(table)
+            const {bonus} = config.payline(table)
+            totalBonus += bonus
             possibility++;
 
             /* if(bonus > 1000){
@@ -30,7 +31,7 @@ const analyze_5x3 = (reelTable) => {
     }
   }
   console.warn(possibility)
-  console.warn(bonus)
-  console.warn((bonus/possibility/9).toFixed(2))
+  console.warn(totalBonus)
+  console.warn((totalBonus/possibility/config.pay).toFixed(2))
   // return;
 }

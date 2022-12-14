@@ -4,6 +4,10 @@ const changeGameType = () => {
   console.log(config)
   // generatePaytable();
   generateSymbolTable();
+
+  if($('#inputReelTable').length > 0){
+    $('#inputReelTable').val(localStorage.getItem(`${gameType}_reelTable`))
+  }
 }
 
 function generatePaytable(){
@@ -168,6 +172,57 @@ function getRTP(){
     }
   } */
   console.log(`預期RTP${totalBonus / totalSymbol * 100}`)
+}
+
+function play(times){
+  const gameType = $('#gameType').val();
+  const inputReelTable = $('#inputReelTable').val();
+  var currentTable = []
+  localStorage.setItem(`${gameType}_reelTable`, inputReelTable)
+
+  const reelTable = JSON.parse(inputReelTable)
+  const table = []
+  for(let x = 0 ; x < config.width; x++){
+    table.push([...reelTable[x], ...reelTable[x].slice(0, config.height-1)])
+  }
+
+  for(let i=0 ; i < times; i++){
+    currentTable = []
+    for(let x = 0 ; x < config.width; x++){
+      const index = Math.floor(Math.random() * reelTable[x].length)
+      currentTable.push(table[x].slice(index, index + config.height))
+    }
+    var {bonus} = config.payline(currentTable)
+    // var {bonus, links} = config.payline(currentTable)
+    playTimes++
+    totalPay += config.pay
+    totalReturn += bonus
+  }
+  
+  // drawCurrentTable(currentTable, links)
+  drawCurrentTable(currentTable, null)
+
+  $('#bonus').text(bonus)
+  $('#playTimes').text(playTimes)
+  $('#totalPay').text(totalPay)
+  $('#totalReturn').text(totalReturn)
+  $('#totalRTP').text((totalReturn / totalPay).toFixed(2))
+}
+
+function drawCurrentTable(currentTable, links){
+  $('#currentSpin').empty()
+  for(let x = 0; x < currentTable.length; x++){
+    $('#currentSpin').append('<div class="col"></div>')
+    for(let y = 0; y < currentTable[x].length; y++){
+      $('#currentSpin div.col:last').append(`<div class="symbol-${currentTable[x][y]}${links&&links[y][x]?' active':' unactive'}">${currentTable[x][y]}</div>`)
+      if(currentTable[x][y] === config.wild){
+        $('#currentSpin div.col:last div:last').addClass('symbol-wd')
+      }
+      if(currentTable[x][y] === config.scatter){
+        $('#currentSpin div.col:last div:last').addClass('symbol-sc')
+      }
+    }
+  }
 }
 
 function shuffle(array) {

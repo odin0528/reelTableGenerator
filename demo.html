@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>Reel Table Generate</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-grid.css">
+    <script src="init.js"></script>
+    <script src="functions.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="algorithm/5x3.js"></script>
+    <script src="algorithm/5x4.js"></script>
+    <script src="payline/nine.js"></script>
+    <script src="payline/oneWay40Payline.js"></script>
+    <script src="configs/zhao_cai_tong_zi.js"></script>
+    <script src="configs/zhao_cai_jin_bao.js"></script>
+    <script src="configs/wild_west_gold.js"></script>
+    <style>
+      table{
+        border: 1px solid #666;
+      }
+      td{
+        text-align: center;
+      }
+
+      #currentSpin{
+        padding: 1.5rem;
+      }
+
+      #currentSpin .col div {
+        width: 100%;
+        height: 100px;
+        line-height: 100px;
+        border: 1px #000 solid;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      #currentSpin .col div.active {
+        box-shadow: 0px 0px 0 5px #f3d42e;
+      }
+
+      .symbol-0{background-color:#000; color: #FFF;}
+      .symbol-1{background-color:aqua;}
+      .symbol-2{background-color:blueviolet}
+      .symbol-3{background-color:indigo;}
+      .symbol-4{background-color:tomato;}
+      .symbol-5{background-color:teal;}
+      .symbol-6{background-color:brown ;}
+      .symbol-7{background-color:chartreuse ;}
+      .symbol-8{background-color:darkblue ; color:#FFF}
+      .symbol-9{background-color:darkseagreen ;}
+      .symbol-10{background-color:pink ;}
+      .symbol-11{background-color:white ;}
+      .symbol-12{background-color:sienna ;}
+      .symbol-13{background-color:orange ;}
+      .symbol-wd{border: 8px solid rgb(255, 0, 0) !important;line-height: 85px !important;}
+      .symbol-sc{border: 8px solid rgb(255, 255, 0) !important;line-height: 85px !important;}
+    </style>
+    <script>
+      $(function(){
+        $('#gameType').on('change', changeGameType)
+        $('#gameType').change();
+      })
+    </script>
+  </head>
+  <body>
+    <div class="row w50 pb-2">
+      <div class="col">遊戲
+        <select id="gameType">
+          <option value="wild_west_gold">牛仔</option>
+          <option value="zhao_cai_jin_bao">招財進寶</option>
+          <option value="zhao_cai_tong_zi">招財童子</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <textarea id="inputReelTable" class="w-100" style="height: 150px;"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><button class="w-100" onclick="play(1)">玩1把</button></div>
+      <div class="col"><button class="w-100" onclick="play(10)">玩10把</button></div>
+      <div class="col"><button class="w-100" onclick="play(100)">玩100把</button></div>
+      <div class="col"><button class="w-100" onclick="play(1000)">玩1000把</button></div>
+      <div class="col"><button class="w-100" onclick="play(10000)">玩10000把</button></div>
+      <div class="col"><button class="w-100" onclick="play(100000)">玩100000把</button></div>
+      <div class="col"><button class="w-100" onclick="play(1000000)">玩1000000把</button></div>
+    </div>
+    <div id="currentSpin" class="row">
+
+    </div>
+    <div id="result" class="row">
+      <div class="col">該局中獎：<span id="bonus"></span></div>
+      <div class="col">遊玩次數：<span id="playTimes"></span></div>
+      <div class="col">投入金額：<span id="totalPay"></span></div>
+      <div class="col">中獎金額：<span id="totalReturn"></span></div>
+      <div class="col">RTP：<span id="totalRTP"></span></div>
+    </div>
+
+  </body>
+</html>

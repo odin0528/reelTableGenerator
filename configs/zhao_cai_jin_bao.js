@@ -4,6 +4,7 @@ configs['zhao_cai_jin_bao'] = {
   height: 3,
   scatter: 10,
   wild: 11,
+  pay: 9,
   symbols: ['H1','H2','H3','H4','L1','L2','L3','L4','L5','L6','SC','WD'],
   defaultPaytable: [
     [2,     0,    0,    0,    0,    0,    0,    0,    0,    0,    0],
