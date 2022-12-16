@@ -1,122 +1,100 @@
 const oneWay40Payline = (table) => {
-  const lines = [
-    [0,0,0,0,0],
-    [1,1,1,1,1],
-    [2,2,2,2,2],
-    [3,3,3,3,3],
-    [0,1,0,1,0],
-    [1,0,1,0,1],
-    [1,2,1,2,1],
-    [2,1,2,1,2],
-    [2,3,2,3,2],
-    [3,2,3,2,3],
-    [0,3,0,3,0],
-    [3,0,3,0,3],
-    [0,1,2,1,0],
-    [1,2,3,2,1],
-    [2,1,0,1,2],
-    [3,2,1,2,3],
-    [0,0,1,0,0],
-    [1,1,2,1,1],
-    [2,2,3,2,2],
-    [3,3,0,3,3],
-    [3,3,2,3,3],
-    [2,2,1,2,2],
-    [1,1,0,1,1],
-    [0,0,3,0,0],
-    [0,1,1,1,0],
-    [1,2,2,2,1],
-    [2,3,3,3,2],
-    [3,0,0,0,3],
-    [3,2,2,2,3],
-    [2,1,1,1,2],
-    [1,0,0,0,1],
-    [0,3,3,3,0],
-    [1,3,1,3,1],
-    [0,2,0,2,0],
-    [2,0,2,0,2],
-    [3,1,3,1,3],
-    [3,2,1,0,1],
-    [0,1,2,3,2],
-    [3,0,1,0,3],
-    [0,3,2,3,0],
-  ];
+  const lines = config.lines;
+  const rates = [1,2,3,5]
+  const badgeProbability = 0.01
+  const badgeBonus = [0,0,4,8,12,20,20,20,20,20,20,20,20,20]
+  var freeGameTimes = 0
 
   const getLineResult = (line) => {
     let bonus = config.defaultPaytable[config.width - 1][line[0]]
-    let rate = 1
+    let wildCount = 0;
     let connect = config.width
     if(line[0] == config.scatter) return [1, 'SC', 0]
     for(let i = 1; i <= config.width - 1; i++){
-      /* if(line[i] === config.wild){
-        rate = 2
+      if(line[i] === config.wild){
+        wildCount++
         continue
-      } */
+      }
       if(line[0] != line[i]){
         connect = i
         bonus = config.defaultPaytable[connect-1][line[0]]
         break
       }
     }
-    return [connect, config.symbols[line[0]], bonus * rate]
+    return [connect, config.symbols[line[0]], bonus * rates[wildCount]]
   }
 
+  // 盤面有3個以上的sc，送8個次免費遊戲
   const getScatter = () =>{
-    let ls = 0
-    let lb = 0
-    let rs = 0
-    let rb = 0
-
+    let counter = 0
     for(let i = 0; i < config.width ; i++){
-      if(table[i].indexOf(config.scatter) === -1 && i > 0){
-        ls = i
-        lb = config.defaultPaytable[ls-1][config.scatter]
-        break;
+      if(table[i].indexOf(config.scatter) !== -1){
+        counter++
       }
     }
 
-    for(let i = config.width; i > 0 ; i--){
-      if(table[i-1].indexOf(config.scatter) === -1 && i < config.width){
-        rs = config.width - i
-        rb = config.defaultPaytable[rs-1][config.scatter]
-        break;
+    if(counter >= 3){
+      console.warn(`獲得免費遊戲 8 場`)
+      freeGameTimes += 8
+    }
+  }
+
+  const runFreeGame = () => {
+    for(let x = 0; x < freeGameTimes; x++){
+      getSpinResult(getRandomTable())
+      
+      // 計算是否再觸發警徽
+      let badgeCount = 0
+      for(let i = 0; i < 20 ; i++){
+        if (Math.random() < badgeProbability ){
+          badgeCount++
+        }
+      }
+
+      if(badgeCount >= 2){
+        freeGameTimes += badgeBonus[badgeCount]
+        console.log(`出現警徽數：${badgeCount}`)
+        console.log(`再獲得免費遊戲：${badgeBonus[badgeCount]}(${freeGameTimes})`)
       }
     }
-
-    return [[ls, 'SC', lb * 9], [rs, 'SC', rb * 9]]
   }
 
-  let total = 0.0;
-  let counter = 0
-  let links = []
-
-  for(let i=0; i < lines.length; i++){
-    const line = [
-      table[0][lines[i][0]],
-      table[1][lines[i][1]],
-      table[2][lines[i][2]],
-      table[3][lines[i][3]],
-      table[4][lines[i][4]]
-    ]
-    const result = getLineResult(line)
-    const bonus = parseFloat(result[2].toFixed(2))
-    total += bonus
-
-    if(bonus > 0){
-      counter++
-      links.push([i+1, ...result])
-    }
-  }
-  // const scatter = getScatter()
-
+  const getSpinResult = (spinTable) => {
+    for(let i=0; i < lines.length; i++){
+      const line = [
+        spinTable[0][lines[i][0]],
+        spinTable[1][lines[i][1]],
+        spinTable[2][lines[i][2]],
+        spinTable[3][lines[i][3]],
+        spinTable[4][lines[i][4]]
+      ]
+      const result = getLineResult(line)
+      const bonus = parseFloat(result[2].toFixed(2))
+      total += bonus
   
+      if(bonus > 0){
+        counter++
+        links.push([i+1, ...result])
+      }
+    }
+  }
+
+
+  var total = 0.0;
+  var counter = 0
+  var links = []
+
+  getSpinResult(table)
+  getScatter()
+  runFreeGame()
+
   /*if(counter >= 3){
     console.log(table)
     console.log(`TOTAL BONUS: ${total.toFixed(2)}`)
     console.log(`LINKS:`, links)
   }*/
 
-  return total
+  return {bonus:total}
 }
 
 

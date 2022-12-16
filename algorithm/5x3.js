@@ -32,6 +32,6 @@ const analyze_5x3 = (reelTable) => {
   }
   console.warn(possibility)
   console.warn(totalBonus)
-  console.warn((totalBonus/possibility/config.pay).toFixed(2))
+  console.warn((totalBonus/possibility/config.pay).toFixed(4))
   // return;
 }

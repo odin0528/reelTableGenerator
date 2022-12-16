@@ -1,10 +1,13 @@
 configs['wild_west_gold'] = {
   title: '牛仔',
+  lines: lines_40,
   width: 5,
   height: 4,
   scatter: 11,
   wild: 12,
+  pay: 40,
   symbols: ['H1','H2','H3','H4','H5','H6','L1','L2','L3','L4','L5','SC','WD'],
+  bonusGameTimes: 8,
   defaultPaytable: [
     [0,   0,    0,    0,      0,    0,    0,    0,    0,    0,    0],
     [0,   0,    0,    0,      0,    0,    0,    0,    0,    0,    0],
@@ -14,4 +17,7 @@ configs['wild_west_gold'] = {
   ],
   analyze: analyze_5x4,
   payline: oneWay40Payline,
+  freegame: () => {
+
+  }
 }

@@ -91,9 +91,8 @@ function getReelTable(){
   const symbolNumber = config.symbols.length;
   const $symbolTableBody =$('#symbolTable tbody');
   var possibility = 1;
+  reelTable = [];
 
-  const reelTable = []
-  const calcReelTable = []
   for(let j = 0; j < reelWidth; j++){
     var symbolCol = [];
     for(let i = 0; i < symbolNumber; i++){
@@ -105,19 +104,13 @@ function getReelTable(){
     shuffle(symbolCol)
     possibility *= symbolCol.length
     reelTable.push(symbolCol)
-    calcReelTable.push([...symbolCol, symbolCol[0], symbolCol[1]])
+    cycleReelTable.push([...symbolCol, ...symbolCol.slice(0, config.height-1)])
   }
   $('#reelTable').text(JSON.stringify(reelTable))
   $('#possibility').text(possibility)
-  /* $.post('getReelTable.php', {
-    gameType,
-    reelTable,
-  }, ()=>{
-    const endAt = Date.now()
-    console.error('end at:', Date.now())
-    console.error('executing for:', endAt - startAt)
-  }) */
-  config.analyze(calcReelTable)
+
+  bonusGameTimes = 0
+  config.analyze()
   const endAt = Date.now()
   console.error('end at:', Date.now())
   console.error('executing for:', endAt - startAt)
@@ -179,19 +172,15 @@ function play(times){
   const inputReelTable = $('#inputReelTable').val();
   var currentTable = []
   localStorage.setItem(`${gameType}_reelTable`, inputReelTable)
+  reelTable = JSON.parse(inputReelTable)
 
-  const reelTable = JSON.parse(inputReelTable)
-  const table = []
+  cycleReelTable = []
   for(let x = 0 ; x < config.width; x++){
-    table.push([...reelTable[x], ...reelTable[x].slice(0, config.height-1)])
+    cycleReelTable.push([...reelTable[x], ...reelTable[x].slice(0, config.height-1)])
   }
 
   for(let i=0 ; i < times; i++){
-    currentTable = []
-    for(let x = 0 ; x < config.width; x++){
-      const index = Math.floor(Math.random() * reelTable[x].length)
-      currentTable.push(table[x].slice(index, index + config.height))
-    }
+    currentTable = getRandomTable()
     var {bonus} = config.payline(currentTable)
     // var {bonus, links} = config.payline(currentTable)
     playTimes++
@@ -207,6 +196,15 @@ function play(times){
   $('#totalPay').text(totalPay)
   $('#totalReturn').text(totalReturn)
   $('#totalRTP').text((totalReturn / totalPay).toFixed(2))
+}
+
+function getRandomTable(){
+  const currentTable = []
+  for(let x = 0 ; x < config.width; x++){
+    const index = Math.floor(Math.random() * reelTable[x].length)
+    currentTable.push(cycleReelTable[x].slice(index, index + config.height))
+  }
+  return currentTable
 }
 
 function drawCurrentTable(currentTable, links){
