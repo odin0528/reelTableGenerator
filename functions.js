@@ -92,6 +92,7 @@ function getReelTable(){
   const $symbolTableBody =$('#symbolTable tbody');
   var possibility = 1;
   reelTable = [];
+  cycleReelTable = [];
 
   for(let j = 0; j < reelWidth; j++){
     var symbolCol = [];

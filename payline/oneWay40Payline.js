@@ -1,9 +1,16 @@
 const oneWay40Payline = (table) => {
   const lines = config.lines;
   const rates = [1,2,3,5]
-  const badgeProbability = 0.01
+  const badgeProbability = 0.02
   const badgeBonus = [0,0,4,8,12,20,20,20,20,20,20,20,20,20]
   var freeGameTimes = 0
+  var wildTable = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]
 
   const getLineResult = (line) => {
     let bonus = config.defaultPaytable[config.width - 1][line[0]]
@@ -34,14 +41,24 @@ const oneWay40Payline = (table) => {
     }
 
     if(counter >= 3){
-      console.warn(`獲得免費遊戲 8 場`)
+      // console.warn(`獲得免費遊戲 8 場`)
       freeGameTimes += 8
     }
   }
 
   const runFreeGame = () => {
+    wildTable = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]
     for(let x = 0; x < freeGameTimes; x++){
-      getSpinResult(getRandomTable())
+      // console.log('free game:' + x)
+      let table = getRandomTable()
+      table = covertTable(table)
+      getSpinResult(table)
       
       // 計算是否再觸發警徽
       let badgeCount = 0
@@ -53,8 +70,8 @@ const oneWay40Payline = (table) => {
 
       if(badgeCount >= 2){
         freeGameTimes += badgeBonus[badgeCount]
-        console.log(`出現警徽數：${badgeCount}`)
-        console.log(`再獲得免費遊戲：${badgeBonus[badgeCount]}(${freeGameTimes})`)
+        // console.log(`出現警徽數：${badgeCount}`)
+        // console.log(`再獲得免費遊戲：${badgeBonus[badgeCount]}(${freeGameTimes})`)
       }
     }
   }
@@ -77,6 +94,19 @@ const oneWay40Payline = (table) => {
         links.push([i+1, ...result])
       }
     }
+  }
+
+  const covertTable = (table) => {
+    for(let x = 0 ; x < 5; x++){
+      for(let y = 0 ; y < 4; y++){
+        if(table[x][y] === config.wild){
+          wildTable[x][y] = 1
+        }else if(wildTable[x][y]){
+          table[x][y] = config.wild
+        }
+      }
+    }
+    return table
   }
 
 
