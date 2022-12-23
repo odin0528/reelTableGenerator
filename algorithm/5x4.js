@@ -16,7 +16,7 @@ const analyze_5x4 = () => {
             ];
 
             const {bonus} = config.payline(table)
-            totalBonus += bonus
+            totalBonus += bonus.toFixed(2)
             possibility++;
 
             /*if(bonus > 10000){

@@ -6,7 +6,8 @@ configs['wild_west_gold'] = {
   scatter: 11,
   wild: 12,
   pay: 40,
-  symbols: ['H1','H2','H3','H4','H5','H6','L1','L2','L3','L4','L5','SC','WD'],
+  symbols: ['H1','H2','H3','H4','H5','H6','L1','L2','L3','L4','L5','SC','WD2','WD3','WD5'],
+  isFreeGameTable: true,
   bonusGameTimes: 8,
   defaultPaytable: [
     [0,   0,    0,    0,      0,    0,    0,    0,    0,    0,    0],

@@ -5,8 +5,17 @@ const changeGameType = () => {
   // generatePaytable();
   generateSymbolTable();
 
+  if(config.isFreeGameTable){
+    $('#inputFreeGameTable').show()
+  }else{
+    $('#inputFreeGameTable').hide()
+  }
+
   if($('#inputReelTable').length > 0){
     $('#inputReelTable').val(localStorage.getItem(`${gameType}_reelTable`))
+    if(config.isFreeGameTable){
+      $('#inputFreeGameTable').val(localStorage.getItem(`${gameType}_freeGameTable`))
+    }
   }
 }
 
@@ -171,32 +180,48 @@ function getRTP(){
 function play(times){
   const gameType = $('#gameType').val();
   const inputReelTable = $('#inputReelTable').val();
+  const inputFreeGameTable = $('#inputFreeGameTable').val();
   var currentTable = []
   localStorage.setItem(`${gameType}_reelTable`, inputReelTable)
+  
   reelTable = JSON.parse(inputReelTable)
+  
 
   cycleReelTable = []
   for(let x = 0 ; x < config.width; x++){
     cycleReelTable.push([...reelTable[x], ...reelTable[x].slice(0, config.height-1)])
   }
 
+  //有free game table的話 就生成free game table
+  if(config.isFreeGameTable){
+    localStorage.setItem(`${gameType}_freeGameTable`, inputFreeGameTable)
+    freeGameTable = JSON.parse(inputFreeGameTable)
+    cycleFreeGameTable = []
+    for(let x = 0 ; x < config.width; x++){
+      cycleFreeGameTable.push([...freeGameTable[x], ...freeGameTable[x].slice(0, config.height-1)])
+    }
+  }
+
   for(let i=0 ; i < times; i++){
     currentTable = getRandomTable()
-    var {bonus} = config.payline(currentTable)
-    // var {bonus, links} = config.payline(currentTable)
+    // var {bonus} = config.payline(currentTable)
+    var {bonus, links} = config.payline(currentTable)
     playTimes++
     totalPay += config.pay
-    totalReturn += bonus
+    totalReturn += parseFloat(bonus.toFixed(2))
   }
   
-  // drawCurrentTable(currentTable, links)
-  drawCurrentTable(currentTable, null)
+  drawCurrentTable(currentTable, links)
+  // drawCurrentTable(currentTable, null)
 
   $('#bonus').text(bonus)
   $('#playTimes').text(playTimes)
+  $('#enterFreeGameRate').text((enterFreeGameTimes / playTimes).toFixed(4))
+  $('#enterFreeGameTimes').text(enterFreeGameTimes)
+  $('#freeGameTimes').text(freeGameTimes)
   $('#totalPay').text(totalPay)
-  $('#totalReturn').text(totalReturn)
-  $('#totalRTP').text((totalReturn / totalPay).toFixed(2))
+  $('#totalReturn').text(totalReturn.toFixed(2))
+  $('#totalRTP').text((totalReturn / totalPay).toFixed(4))
 }
 
 function getRandomTable(){
@@ -204,6 +229,15 @@ function getRandomTable(){
   for(let x = 0 ; x < config.width; x++){
     const index = Math.floor(Math.random() * reelTable[x].length)
     currentTable.push(cycleReelTable[x].slice(index, index + config.height))
+  }
+  return currentTable
+}
+
+function getRandomFreeGameTable(){
+  const currentTable = []
+  for(let x = 0 ; x < config.width; x++){
+    const index = Math.floor(Math.random() * freeGameTable[x].length)
+    currentTable.push(cycleFreeGameTable[x].slice(index, index + config.height))
   }
   return currentTable
 }
