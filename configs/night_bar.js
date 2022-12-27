@@ -1,0 +1,20 @@
+configs['night_bar'] = {
+  title: '吧檯夜店',
+  width: 5,
+  height: 3,
+  scatter: 10,
+  wild: 11,
+  pay: 5,
+  symbols: ['H1','H2','H3','H4','L1','L2','L3','SC','WD'],
+  defaultPaytable: [
+    [0, 0, 30, 50, 100],
+    [0, 0, 30, 50, 100],
+    [0, 0, 20, 35, 75],
+    [0, 0, 8, 10, 30],
+    [0, 0, 5, 8, 15],
+    [0, 0, 5, 8, 15],
+    [0, 0, 5, 8, 15],
+  ],
+  analyze: analyze_5x3,
+  payline: oneWay243Line,
+}
