@@ -116,6 +116,15 @@ function getReelTable(){
     reelTable.push(symbolCol)
     cycleReelTable.push([...symbolCol, ...symbolCol.slice(0, config.height-1)])
   }
+
+  if(config.isFreeGameTable){
+    freeGameTable = []
+    for( var x in reelTable ){
+      freeGameTable.push(reelTable[x].filter(symbol=>symbol!=config.scatter))
+      $('#freeGameReelTable').text(JSON.stringify(freeGameTable))
+    }
+  }
+
   $('#reelTable').text(JSON.stringify(reelTable))
   $('#possibility').text(possibility)
 

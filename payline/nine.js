@@ -60,8 +60,14 @@ const twoWay9Payline = (table) => {
     let lb = 0
     let rs = 0
     let rb = 0
+    let rate = 1
 
     for(let i = 0; i < config.width ; i++){
+      if(table[i].indexOf(config.wild) !== -1){
+        rate = 2
+        continue
+      }
+
       if(table[i].indexOf(config.scatter) === -1){
         if(i === 0) break;
         ls = i
@@ -71,6 +77,11 @@ const twoWay9Payline = (table) => {
     }
 
     for(let i = config.width; i > 0 ; i--){
+      if(table[i-1].indexOf(config.wild) !== -1){
+        rate = 2
+        continue
+      }
+
       if(table[i-1].indexOf(config.scatter) === -1){
         if(i === config.width) break;
         rs = config.width - i
@@ -79,7 +90,7 @@ const twoWay9Payline = (table) => {
       }
     }
 
-    return [[ls, 'SC', lb * 9], [rs, 'SC', rb * 9]]
+    return [[ls, 'SC', lb * 9 * rate], [rs, 'SC', rb * 9 * rate]]
   }
 
   let bonus = 0.0;
